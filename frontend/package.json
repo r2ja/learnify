@@ -1,0 +1,45 @@
+{
+  "name": "frontend-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:seed": "node scripts/seed.js",
+    "setup:postgres": "bash ./scripts/setup-postgres.sh",
+    "seed:courses": "node scripts/seed-courses.js"
+  },
+  "dependencies": {
+    "@types/bcryptjs": "^3.0.0",
+    "@types/jsonwebtoken": "^9.0.9",
+    "bcryptjs": "^3.0.2",
+    "cookies-next": "^5.1.0",
+    "framer-motion": "^12.7.4",
+    "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.501.0",
+    "next": "15.3.1",
+    "pg": "^8.14.1",
+    "pg-format": "^1.0.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "uuid": "^11.1.0",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/pg": "^8.11.13",
+    "@types/pg-format": "^1.0.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
+    "autoprefixer": "^10.4.17",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.1",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

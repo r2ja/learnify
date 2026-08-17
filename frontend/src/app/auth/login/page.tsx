@@ -1,0 +1,54 @@
+'use client';
+
+import Link from 'next/link';
+import { LoginForm } from '@/components/auth/LoginForm';
+import { useEffect } from 'react';
+import { AnimatedSidebar } from '@/components/auth/AnimatedSidebar';
+
+export default function LoginPage() {
+  useEffect(() => {
+    // Add overflow control to the body
+    document.body.style.overflow = 'hidden';
+    
+    return () => {
+      // Reset overflow when component unmounts
+      document.body.style.overflow = '';
+    };
+  }, []);
+  
+  return (
+    <div className="fixed inset-0 flex flex-col md:flex-row w-screen h-screen overflow-hidden">
+      {/* Left side - Logo and animation */}
+      <AnimatedSidebar />
+      
+      {/* Right side - Login form */}
+      <div className="w-full md:w-1/2 h-full bg-white flex justify-center items-center px-8">
+        <div className="w-full max-w-md">
+          <div className="mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-darkTeal text-center">
+              Welcome Back
+            </h2>
+            <p className="text-gray-600 text-center">
+              Sign in to continue your learning journey
+            </p>
+          </div>
+
+          <LoginForm />
+          
+          <div className="mt-6 text-center">
+            <p className="text-gray-600">
+              Don't have an account?{' '}
+              <Link href="/auth/signup" className="text-secondary hover:text-secondary-700 font-medium">
+                Sign up
+              </Link>
+            </p>
+          </div>
+          
+          <div className="mt-6 text-center text-gray-500 text-sm">
+            © {new Date().getFullYear()} Learnify. All rights reserved.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+} 

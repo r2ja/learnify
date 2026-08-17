@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#253439" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Brain -->
+  <path d="M15.5 3.5a2.5 2.5 0 0 1 0 5h-7a2.5 2.5 0 0 1 0-5h7Z"/>
+  <path d="M16 8.5v10c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2v-10"/>
+  <path d="M6 18.5h12"/>
+  <path d="M4 13.5h3"/>
+  <path d="M11 13.5h2"/>
+  <path d="M17 13.5h3"/>
+  <path d="M8 8.5v10"/>
+  <path d="M16 8.5v10"/>
+  <!-- Brain Circuits -->
+  <path d="M20 3.5a2 2 0 0 1 0 4"/>
+  <path d="M20 7.5v2"/>
+  <path d="M20 18.5a2 2 0 0 0 0-4"/>
+  <path d="M20 14.5v-2"/>
+  <path d="M4 3.5a2 2 0 0 0 0 4"/>
+  <path d="M4 7.5v2"/>
+  <path d="M4 18.5a2 2 0 0 1 0-4"/>
+  <path d="M4 14.5v-2"/>
+  <!-- Connections between brain and circuits -->
+  <path d="M8 3.5c-2 0-4 1-4 3"/>
+  <path d="M16 3.5c2 0 4 1 4 3"/>
+  <path d="M8 18.5c-2 0-4-1-4-3"/>
+  <path d="M16 18.5c2 0 4-1 4-3"/>
+</svg> 
