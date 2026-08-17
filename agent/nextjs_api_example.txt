@@ -1,0 +1,157 @@
+// This file demonstrates how the Next.js API route would be implemented
+// to call the Python agent system. This would typically be located at:
+// /home/r4ja/Projects/learnify-frontend/src/app/api/agent/chat/route.ts
+
+import { NextRequest, NextResponse } from 'next/server';
+import { exec } from 'child_process';
+import { spawn } from 'child_process';
+import { ReadableStream } from 'stream/web';
+import { JWT, getToken } from 'next-auth/jwt';
+import { cookies } from 'next/headers';
+
+// Verify the request has a valid JWT session 
+async function getAuthenticatedUser(req: NextRequest): Promise<JWT | null> {
+  // Extract token from cookies
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  return token;
+}
+
+// Convert Node.js child_process stdout to a ReadableStream for streaming
+function childProcessToReadableStream(childProcess: any): ReadableStream {
+  return new ReadableStream({
+    start(controller) {
+      // Handle data chunks
+      childProcess.stdout.on('data', (chunk: Buffer) => {
+        const data = chunk.toString();
+        
+        // Parse SSE data from Python
+        const lines = data.split('\n');
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            let eventData = line.slice(6).trim();
+            
+            // Check for end marker
+            if (eventData === '[DONE]') {
+              controller.close();
+              return;
+            }
+            
+            // Try to parse JSON
+            try {
+              const parsedData = JSON.parse(eventData);
+              controller.enqueue(JSON.stringify(parsedData) + '\n');
+            } catch (e) {
+              // Handle non-JSON data
+              controller.enqueue(eventData + '\n');
+            }
+          }
+        }
+      });
+      
+      // Handle end of process
+      childProcess.on('close', () => {
+        controller.close();
+      });
+      
+      // Handle errors
+      childProcess.stderr.on('data', (data: Buffer) => {
+        console.error(`Agent error: ${data.toString()}`);
+      });
+      
+      childProcess.on('error', (err: Error) => {
+        console.error('Failed to start agent process:', err);
+        controller.error(err);
+      });
+    }
+  });
+}
+
+// POST handler for /api/agent/chat
+export async function POST(req: NextRequest) {
+  try {
+    // Authenticate user
+    const user = await getAuthenticatedUser(req);
+    if (!user || !user.sub) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    
+    // Parse request body
+    const body = await req.json();
+    const { 
+      courseId, 
+      chapterId, 
+      prompt, 
+      language = 'english' 
+    } = body;
+    
+    // Validate required fields
+    if (!courseId || !prompt) {
+      return NextResponse.json(
+        { error: 'Missing required fields: courseId, prompt' }, 
+        { status: 400 }
+      );
+    }
+    
+    // Get user learning profile from another API route or database
+    // This is simplified here - in a real app, you'd fetch from DB
+    const learningProfile = {
+      processingStyle: body.learningProfile?.processingStyle || 'active',
+      perceptionStyle: body.learningProfile?.perceptionStyle || 'visual',
+      inputStyle: body.learningProfile?.inputStyle || 'interactive',
+      understandingStyle: body.learningProfile?.understandingStyle || 'sequential'
+    };
+    
+    // Prepare input for Python process
+    const agentInput = JSON.stringify({
+      userId: user.sub,
+      courseId,
+      chapterId,
+      prompt,
+      language,
+      learningProfile
+    });
+    
+    // Path to the Python script
+    const pythonPath = '/home/r4ja/Desktop/Agent(v0.8)/venv/bin/python';
+    const scriptPath = '/home/r4ja/Desktop/Agent(v0.8)/api_integration_example.py';
+    
+    // Spawn child process with the agent script
+    const pythonProcess = spawn(pythonPath, [scriptPath], {
+      env: {
+        ...process.env,
+        PYTHONUNBUFFERED: '1' // Keep Python output unbuffered for streaming
+      }
+    });
+    
+    // Send input to the process
+    pythonProcess.stdin.write(agentInput);
+    pythonProcess.stdin.end();
+    
+    // Create a streaming response
+    const stream = childProcessToReadableStream(pythonProcess);
+    
+    // Return the streaming response
+    return new NextResponse(stream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+      }
+    });
+    
+  } catch (error: any) {
+    console.error('Error in agent chat API:', error);
+    return NextResponse.json(
+      { error: 'Internal server error', message: error.message }, 
+      { status: 500 }
+    );
+  }
+}
+
+// For compatibility with older browsers, also define GET
+export async function GET(req: NextRequest) {
+  return NextResponse.json(
+    { error: 'Method not allowed. Use POST instead.' }, 
+    { status: 405 }
+  );
+} 
