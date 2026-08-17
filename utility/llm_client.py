@@ -31,7 +31,7 @@ class LLMClient:
         
         # Fallback to hardcoded key if needed
         if not self.api_key:
-            self.api_key = "***REMOVED***"
+            self.api_key = os.getenv("OPENROUTER_API_KEY")
             print("Warning: Using fallback API key. Consider setting OPENROUTER_API_KEY in .env file.")
             
         self.base_url = "https://openrouter.ai/api/v1/chat/completions"

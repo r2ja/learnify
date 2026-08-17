@@ -108,7 +108,7 @@ Please use these tools when appropriate to enhance your explanation.
 def call_llm_direct(messages: List[Dict[str, str]], stream: bool = True) -> Any:
     """Call LLM directly with requests instead of using LLMClient."""
     # Hardcode the working API key since dotenv is problematic
-    api_key = "***REMOVED***"
+    api_key = os.getenv("OPENROUTER_API_KEY")
     
     # Set up request
     url = "https://openrouter.ai/api/v1/chat/completions"

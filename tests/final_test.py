@@ -139,7 +139,7 @@ def run_test():
     # === DIRECTLY COPIED FROM WORKING SCRIPT ===
     
     # Get API key - use the alternate key that worked in the debug script
-    api_key = "***REMOVED***"
+    api_key = os.getenv("OPENROUTER_API_KEY")
     
     # Set up request
     url = "https://openrouter.ai/api/v1/chat/completions"

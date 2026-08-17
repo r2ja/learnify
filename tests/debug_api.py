@@ -66,7 +66,7 @@ def debug_openrouter():
         print(f"❌ ERROR: Exception occurred: {str(e)}")
         
     # Try with alternate key
-    alternate_key = "***REMOVED***"
+    alternate_key = os.getenv("OPENROUTER_API_KEY")
     print("\n--- Trying with alternate API key ---\n")
     headers["Authorization"] = f"Bearer {alternate_key}"
     

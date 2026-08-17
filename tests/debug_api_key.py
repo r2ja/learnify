@@ -20,7 +20,7 @@ def test_api_key_comparison():
     client_key = client.api_key
     
     # Known working key
-    working_key = "***REMOVED***"
+    working_key = os.getenv("OPENROUTER_API_KEY")
     
     # Compare keys
     print(f"Original Key:  {working_key}")

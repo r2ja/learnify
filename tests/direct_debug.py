@@ -12,7 +12,7 @@ def debug_auth_headers():
     print("\n=== Debugging Authentication Headers ===\n")
     
     # Get API key - use the alternate key that worked in the debug script
-    api_key = "***REMOVED***"
+    api_key = os.getenv("OPENROUTER_API_KEY")
     print(f"Using OpenRouter API Key: {api_key}")
     
     # Test different header formats

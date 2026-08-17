@@ -11,7 +11,7 @@ def test_llm_client():
     """Direct test of LLMClient with both hardcoded and environment API keys"""
     
     # Test 1: Hardcoded API key
-    hardcoded_key = "***REMOVED***"
+    hardcoded_key = os.getenv("OPENROUTER_API_KEY")
     print("=== Testing with hardcoded API key ===")
     client1 = LLMClient(hardcoded_key)
     test_client(client1, "with hardcoded key")
